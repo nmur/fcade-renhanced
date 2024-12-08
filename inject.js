@@ -1,4 +1,4 @@
-// Fightcade Renchanced Plugins
+// Fightcade Renhanced Plugins
 // Author: Ren
 // Website: https://arkadyzja.honmaru.pl
 
