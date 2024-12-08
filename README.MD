@@ -18,7 +18,6 @@ while**
 
 ## Installation
 1. Download `inject.js` and place it in your `Fightcade\fc2-electron\resources\app\inject` directory.
-2. Open Fightcade and press a button on your game controller. You will see a notification that says *Game Controller Initialized*.
 
 ## Configuration
 You can enable/disable each plugin changing `true` to `false` for individual options in `CONFIG` section on top of the `inject.js` file.
