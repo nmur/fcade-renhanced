@@ -2,15 +2,22 @@
 // Author: Ren
 // Website: https://arkadyzja.honmaru.pl
 
+document.addEventListener("keydown", (e) => {
+  if (e.key === "F12") {
+    require("electron").remote.getCurrentWindow().webContents.openDevTools();
+  }
+});
+
 
 // CONFIGURATION //
 const CONFIG = {
     addMorePlayerInfoToChat: true,
-    showThemeButtons: true,
-    showFavoritesButton: true,
-    showFavoriteNavigationButtons: true,
-    startupTheme: 'solpor',
+    showThemeButtons: false,
+    showFavoritesButton: false,
+    showFavoriteNavigationButtons: false,
+    startupTheme: 'default',
     themes: ["default", "lembranza", "meigallo", "rabudo", "solpor", "vagalume", "bretema", "luar", "furancho"],
+    pingLimit: 150
 };
 
 // STYLING //
@@ -259,7 +266,20 @@ const processMessages = (FCADE) => {
     });
 };
 
-
+const filterUsers = (FCADE, pingLimit) => {
+	FCADE.$refs[FCADE.activeChannelId][0]?.$refs?.usersList.users.forEach(user => {
+		if (user.ping > pingLimit) { 
+            FCADE.$refs[FCADE.activeChannelId][0]?.$refs?.usersList.removeUser(user);
+		}
+	});
+    
+	FCADE.$refs[FCADE.activeChannelId][0]?.$refs?.usersList.matches.forEach(match => {
+		if ((match.player1.name == "<offline>" || match.player1.ping > pingLimit) && 
+            (match.player2.name == "<offline>" || match.player2.ping > pingLimit)) { 
+            FCADE.$refs[FCADE.activeChannelId][0]?.$refs?.usersList.removeMatch(match);
+		}
+	});
+}
 
 /**
  * Waits for the Vue app to initialize and executes a callback once ready.
@@ -335,7 +355,10 @@ const fightcadePlugins = (fcWindow) => {
         setInterval(()=>{
             processMessages(FCADE);
         }, 1000);
-        
+		
+        setInterval(()=>{
+            filterUsers(FCADE, CONFIG.pingLimit);
+        }, 500);
 
         if (CONFIG.addMorePlayerInfoToChat) {
             console.log({ addMorePlayerInfoToChat: CONFIG.addMorePlayerInfoToChat });
@@ -390,7 +413,7 @@ const fightcadePlugins = (fcWindow) => {
 
 
 
-        initializeAddons('https://www.honmaru.pl/images/logo/arkadyzja.png', 'https://arkadyzja.honmaru.pl', 'Arkadyzja - DuckStation Rollback Multiplayer Lobby!')
+//        initializeAddons('https://www.honmaru.pl/images/logo/arkadyzja.png', 'https://arkadyzja.honmaru.pl', 'Arkadyzja - DuckStation Rollback Multiplayer Lobby!')
 
 
 
